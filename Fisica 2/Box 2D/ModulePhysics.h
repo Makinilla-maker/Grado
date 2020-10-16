@@ -2,7 +2,6 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Box2D/Box2D/Box2D.h"
-
 #define GRAVITY_X 0.0f
 #define GRAVITY_Y -7.0f
 
@@ -10,7 +9,7 @@
 #define METER_PER_PIXEL 0.02f // this is 1 / PIXELS_PER_METER !
 
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
-#define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * (float) p)
+#define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
 class b2World;
 class b2Body;
@@ -87,27 +86,26 @@ public:
 		};
 		b2Vec2 vec[12];
 		int h = 0;
-		
-		for (int i = 0; i < 24; i+=2)
+
+		for (int i = 0; i < 24; i += 2)
 		{
 			vec[h].Set(PIXEL_TO_METERS(points[i]), PIXEL_TO_METERS(points[i + 1]));
 			h++;
 		}
-	
+
 		chain.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 		b2Body* b = world->CreateBody(&chain);
 
-	
+
 		b2ChainShape chains;
 		chains.CreateLoop(vec, 12);
 
 		b2FixtureDef fixture;
 		fixture.shape = &chains;
-	
+
 
 		b->CreateFixture(&fixture);
 	}
-
 	// TODO 4: Move body creation to 3 functions to create circles, rectangles and chains
 
 private:
