@@ -201,3 +201,14 @@ bool ModulePhysics::CleanUp()
 
 	return true;
 }
+void Physicbody::GetPosition(int& x, int& y)const 
+{
+	b2Vec2 pos = body->GetPosition();
+	x = METERS_TO_PIXELS(pos.x) - (width);
+	x = METERS_TO_PIXELS(pos.x)- (height);
+}
+
+float Physicbody::GetRotation() const
+{
+	return RADTODEG * body->GetAngle();
+}

@@ -14,10 +14,24 @@
 class b2World;
 class b2Body;
 
-// TODO 6: Create a small class that keeps a pointer to tghe b2Body
+// TODO 6: Create a small class that keeps a pointer to the b2Body
 // and has a method to request the position
 // then write the implementation in the .cpp
 // Then make your circle creation function to return a pointer to that class
+class Physicbody {
+public:
+	Physicbody()
+	{
+		body = NULL;
+	}
+	~Physicbody() {
+	}
+	void GetPosition(int& x, int& y) const;
+	float GetRotation()const;
+private:
+	int width, height;
+	b2Body *body;
+};
 
 
 class ModulePhysics : public Module
