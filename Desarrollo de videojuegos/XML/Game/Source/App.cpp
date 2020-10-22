@@ -5,6 +5,7 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Scene.h"
+#include "Map.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -17,20 +18,22 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 {
 	frames = 0;
 
-	input = new Input();
 	win = new Window();
+	input = new Input();
 	render = new Render();
 	tex = new Textures();
 	audio = new Audio();
 	scene = new Scene();
+	map = new Map();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
-	AddModule(input);
 	AddModule(win);
+	AddModule(input);
 	AddModule(tex);
 	AddModule(audio);
 	AddModule(scene);
+	AddModule(map);
 
 	// Render last to swap buffer
 	AddModule(render);
@@ -84,7 +87,7 @@ bool App::Awake()
 		ListItem<Module*>* item;
 		item = modules.start;
 
-		while (item != NULL && ret == true)
+		while ((item != NULL) && (ret == true))
 		{
 			// L01: DONE 5: Add a new argument to the Awake method to receive a pointer to an xml node.
 			// If the section with the module name exists in config.xml, fill the pointer with the valid xml_node
@@ -95,6 +98,12 @@ bool App::Awake()
 		}
 	}
 
+	pugi::xml_parse_result result = saveLoadFile.load_file("save_game.xml");
+	if (result != NULL)
+	{
+		saveLoadNode = saveLoadFile.child("save_state");
+	}
+	
 	return ret;
 }
 
@@ -290,9 +299,17 @@ void App::SaveGameRequest() const
 // then call all the modules to load themselves
 bool App::LoadGame()
 {
-	bool ret = false;
+	bool ret = true;
+	
+	ListItem<Module*>* item;
+	item = modules.start;
 
-	//...
+	while (item != NULL && ret == true)
+	{
+		ret = item->data->LoadState(saveLoadNode.child(item->data->name.GetString()));
+		item = item->next;
+	}
+	saveLoadFile.reset();
 
 	loadGameRequested = false;
 
@@ -304,7 +321,15 @@ bool App::SaveGame() const
 {
 	bool ret = true;
 
-	//...
+	ListItem<Module*>* item;
+	item = modules.start;
+
+	while (item != NULL && ret == true)
+	{
+		ret = item->data->SaveState(saveLoadNode.child(item->data->name.GetString()));
+		item = item->next;
+	}
+	saveLoadFile.save_file("save_game.xml");
 
 	saveGameRequested = false;
 

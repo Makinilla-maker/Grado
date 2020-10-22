@@ -109,6 +109,9 @@ private:
 
 	mutable bool saveGameRequested;
 	bool loadGameRequested;
+
+	pugi::xml_document saveLoadFile;
+	pugi::xml_node saveLoadNode;
 };
 
 extern App* app;

@@ -31,8 +31,10 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-	img = app->tex->Load("Assets/textures/test.png");
+	// L03: DONE: Load map
+	app->map->Load("hello2.tmx");
 	app->audio->PlayMusic("Assets/audio/music/music_spy.ogg");
+
 	return true;
 }
 
@@ -69,8 +71,11 @@ bool Scene::Update(float dt)
 	// Draw map
 	app->map->Draw();
 
-	// L03: TODO 7: Set the window title with map/tileset info
-	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d", 0, 0, 0, 0, 0);
+	// L03: DONE 7: Set the window title with map/tileset info
+	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
+				   app->map->data.width, app->map->data.height,
+				   app->map->data.tileWidth, app->map->data.tileHeight,
+				   app->map->data.tilesets.count());
 
 	app->win->SetTitle(title.GetString());
 
